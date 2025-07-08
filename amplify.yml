@@ -5,10 +5,14 @@ frontend:
       commands:
         - nvm use 20
         - node --version
-        - npm ci
+        - npm --version
+        - echo "Checking for package-lock.json..."
+        - if [ -f package-lock.json ]; then echo "Lock file found, using npm ci"; npm ci; else echo "No lock file, using npm install"; npm install; fi
     build:
       commands:
+        - echo "Starting build..."
         - npm run build
+        - echo "Build completed successfully"
   artifacts:
     baseDirectory: dist
     files:
