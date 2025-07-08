@@ -1,0 +1,32 @@
+version = 0.1
+[user-access.deploy.parameters]
+stack_name = "unbiasedupdates"
+resolve_s3 = true
+s3_prefix = "unbiasedupdates"
+region = "us-east-1"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+disable_rollback = true
+image_repositories = []
+
+[root-access.deploy.parameters]
+stack_name = "unbiasedupdates"
+resolve_s3 = true
+s3_prefix = "unbiasedupdates"
+region = "us-east-1"
+profile = "root-access"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+disable_rollback = true
+image_repositories = []
+
+[default.deploy.parameters]
+stack_name = "unbiasedupdates"
+resolve_s3 = true
+s3_prefix = "unbiasedupdates"
+region = "us-east-1"
+profile = "root-access"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+disable_rollback = true
+image_repositories = []

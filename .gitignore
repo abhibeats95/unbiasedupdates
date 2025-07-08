@@ -1,0 +1,66 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+tests/rough.ipynb
+env/
+.env/
+*.venv
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nosetests/
+coverage.xml
+*.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# IDE / Editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Caches
+__pypackages__/
+.cache/
+.mypy_cache/
+.pytest_cache/
+
+# Docker
+docker-compose.override.yml
+.dockerignore
+
+# Generated files from pip install -e .
+*.egg-info/
+build/
+
+
+# AWS SAM build artifacts and related files
+.aws-sam/
+build-sam.bat
+
+# Custom project-specific ignores
+assistant/queryengine_local.py
+secrets.json

@@ -1,0 +1,76 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Deploy Lambda function for unbiasedupdates without schedule for now.
+
+Globals:
+  Function:
+    Timeout: 700
+    Runtime: python3.11
+    MemorySize: 512
+    Architectures:
+      - x86_64
+
+Resources:
+  NewsProcessorFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: newsscrapingandfeed_BBC_AJ
+      Handler: lambda_funtion.lambda_handler
+      CodeUri: lambdas/newsscrapingandfeed_BBC_AJ
+      Description: Parses and summarizes news (manual or future EventBridge trigger)
+      Policies:
+        - AWSLambdaBasicExecutionRole  # Gives permission to write logs to CloudWatch
+        - Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action: secretsmanager:GetSecretValue
+              Resource: arn:aws:secretsmanager:us-east-1:851725497496:secret:llmapikeys*
+            - Effect: Allow
+              Action:
+                - dynamodb:GetItem
+                - dynamodb:PutItem
+              Resource: arn:aws:dynamodb:us-east-1:851725497496:table/news_articles
+
+  GetRecentNewsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: get_recent_news
+      Handler: lambda_funtion.lambda_handler
+      CodeUri: lambdas/newsstreamer
+      Description: Returns recent news articles (last 7 days) for frontend
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            # --- 4. MODIFIED: Link this event to our explicit API resource ---
+            RestApiId: !Ref MyApi
+            Path: /articles/recent
+            Method: GET
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action: dynamodb:Scan
+              Resource: arn:aws:dynamodb:us-east-1:851725497496:table/news_articles
+
+  MyApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: GetNewsApi
+      StageName: Prod
+      Domain:
+        DomainName: api.unbiasedupdates.com
+        CertificateArn: arn:aws:acm:us-east-1:851725497496:certificate/c02ac0cd-0543-4cb0-84ce-f84a4d33b953
+
+Outputs:
+  NewsProcessorFunctionArn:
+    Description: "ARN of the NewsProcessorFunction Lambda function"
+    Value: !GetAtt NewsProcessorFunction.Arn
+
+  ApiUrl:
+    Description: "API Gateway endpoint URL for Prod stage"
+    Value: !Sub "https://${MyApi}.execute-api.${AWS::Region}.amazonaws.com/Prod"
+  CustomApiUrl:
+    Description: "Custom domain API Gateway endpoint URL"
+    Value: !Sub "https://api.unbiasedupdates.com/articles/recent"
