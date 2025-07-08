@@ -28,7 +28,7 @@ import json
 from boto3.session import Session
 
 def get_secret():
-    secret_name = "llmapikeys"
+    secret_name = "llmapikeys_1"
     region_name = "us-east-1"
 
     # Use a specific profile (locally only — not needed in Lambda)
